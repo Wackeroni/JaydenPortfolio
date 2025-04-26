@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Jayden Parisutham James - ePortfolio</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap">
   <style>
     :root {
       --background-color: #121212;
@@ -55,6 +56,7 @@
       text-align: center;
       z-index: 1;
       padding: 2rem;
+      animation: fadeInUp 1.5s ease-out;
     }
 
     .header-title {
@@ -65,12 +67,14 @@
       background-clip: text;
       color: transparent;
       font-weight: 800;
+      animation: gradientShift 8s ease infinite;
     }
 
     .header-subtitle {
       font-size: 1.5rem;
       margin-bottom: 2rem;
       opacity: 0.8;
+      animation: fadeInUp 1.5s ease-out 0.5s both;
     }
 
     nav {
@@ -100,10 +104,14 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      position: relative;
+      overflow: hidden;
     }
 
     .nav-logo span {
       color: var(--highlight-color);
+      display: inline-block;
+      animation: pulse 2s infinite;
     }
 
     .nav-links {
@@ -152,6 +160,13 @@
       display: inline-block;
       left: 50%;
       transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .section-title.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
     }
 
     .section-title::after {
@@ -162,6 +177,13 @@
       width: 100%;
       height: 3px;
       background: linear-gradient(90deg, var(--highlight-color), var(--tertiary-highlight-color));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.8s ease;
+    }
+
+    .section-title.visible::after {
+      transform: scaleX(1);
     }
 
     .projects-grid {
@@ -176,14 +198,21 @@
       background-color: var(--card-bg);
       border-radius: 15px;
       overflow: hidden;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      transition: transform 0.5s ease, box-shadow 0.5s ease;
       height: 300px;
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
       cursor: pointer;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .project-card.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .project-card:hover {
-      transform: translateY(-10px);
+      transform: translateY(-10px) scale(1.02);
       box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
     }
 
@@ -195,7 +224,7 @@
     }
 
     .project-card:hover .project-img {
-      transform: scale(1.05);
+      transform: scale(1.1);
     }
 
     .project-overlay {
@@ -205,6 +234,14 @@
       width: 100%;
       padding: 1.5rem;
       background: linear-gradient(to top, rgba(18, 18, 18, 0.9) 0%, rgba(18, 18, 18, 0) 100%);
+      transform: translateY(20px);
+      opacity: 0.8;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .project-card:hover .project-overlay {
+      transform: translateY(0);
+      opacity: 1;
     }
 
     .project-title {
@@ -227,6 +264,12 @@
       border-radius: 20px;
       font-size: 0.8rem;
       font-weight: 500;
+      transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+
+    .project-card:hover .project-tag {
+      transform: scale(1.05);
+      background-color: var(--secondary-highlight-color);
     }
 
     .modal {
@@ -242,7 +285,7 @@
       align-items: center;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.5s ease;
     }
 
     .modal.active {
@@ -260,6 +303,14 @@
       box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
       padding: 2rem;
       position: relative;
+      transform: scale(0.9);
+      opacity: 0;
+      transition: transform 0.5s ease, opacity 0.5s ease;
+    }
+
+    .modal.active .modal-content {
+      transform: scale(1);
+      opacity: 1;
     }
 
     .modal-close {
@@ -271,11 +322,12 @@
       border: none;
       font-size: 1.5rem;
       cursor: pointer;
-      transition: transform 0.3s ease;
+      transition: transform 0.3s ease, color 0.3s ease;
     }
 
     .modal-close:hover {
-      transform: scale(1.2);
+      transform: rotate(90deg);
+      color: var(--highlight-color);
     }
 
     .modal-img {
@@ -285,18 +337,70 @@
       border-radius: 10px;
       margin-bottom: 1.5rem;
       border: 2px solid var(--highlight-color);
+      box-shadow: 0 5px 15px rgba(123, 63, 153, 0.3);
+      transition: transform 0.5s ease;
+    }
+
+    .modal-img:hover {
+      transform: scale(1.02);
+    }
+
+    .modal-img-container {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-img-nav {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+    }
+
+    .modal-img-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .modal-img-dot.active {
+      background-color: var(--highlight-color);
+      transform: scale(1.2);
     }
 
     .modal-title {
       color: var(--tertiary-highlight-color);
       font-size: 2rem;
       margin-bottom: 1rem;
+      position: relative;
+      display: inline-block;
+    }
+
+    .modal-title::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 50px;
+      height: 3px;
+      background-color: var(--highlight-color);
+      transition: width 0.5s ease;
+    }
+
+    .modal-content:hover .modal-title::after {
+      width: 100%;
     }
 
     .modal-desc {
       font-size: 1.1rem;
       line-height: 1.8;
       margin-bottom: 1.5rem;
+      opacity: 0.9;
     }
 
     .modal-tags {
@@ -313,12 +417,31 @@
       border-radius: 20px;
       font-size: 0.9rem;
       font-weight: 500;
+      transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+
+    .modal-tag:hover {
+      transform: translateY(-3px);
+      background-color: var(--secondary-highlight-color);
     }
 
     .skills-section {
       padding: 5rem 0;
       background-color: var(--secondary-bg);
       margin-top: 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .skills-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 30% 30%, rgba(123, 63, 153, 0.1) 0%, rgba(30, 30, 30, 0) 70%);
+      z-index: 0;
     }
 
     .skills-container {
@@ -327,6 +450,8 @@
       justify-content: center;
       gap: 1.5rem;
       margin-top: 3rem;
+      position: relative;
+      z-index: 1;
     }
 
     .skill-card {
@@ -337,11 +462,18 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      transition: transform 0.5s ease, box-shadow 0.5s ease, border-color 0.5s ease;
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
       border: 2px solid transparent;
       position: relative;
       overflow: hidden;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .skill-card.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .skill-card::before {
@@ -361,8 +493,8 @@
     }
 
     .skill-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+      transform: translateY(-15px) scale(1.05);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
       border-color: var(--highlight-color);
     }
 
@@ -370,19 +502,43 @@
       font-size: 2.5rem;
       color: var(--highlight-color);
       margin-bottom: 1rem;
+      transition: transform 0.5s ease, color 0.5s ease;
+    }
+
+    .skill-card:hover .skill-icon {
+      transform: scale(1.2);
+      color: var(--tertiary-highlight-color);
     }
 
     .skill-title {
       font-size: 1.2rem;
       font-weight: 600;
       text-align: center;
+      transition: color 0.3s ease;
+    }
+
+    .skill-card:hover .skill-title {
+      color: var(--tertiary-highlight-color);
     }
 
     .footer {
       background-color: var(--secondary-bg);
-      padding: 2rem;
+      padding: 3rem 2rem;
       text-align: center;
       margin-top: 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 70% 30%, rgba(123, 63, 153, 0.1) 0%, rgba(30, 30, 30, 0) 70%);
+      z-index: 0;
     }
 
     .social-links {
@@ -390,22 +546,35 @@
       justify-content: center;
       gap: 1.5rem;
       margin: 1.5rem 0;
+      position: relative;
+      z-index: 1;
     }
 
     .social-link {
       color: var(--text-color);
       font-size: 1.5rem;
       transition: color 0.3s ease, transform 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: var(--card-bg);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     }
 
     .social-link:hover {
       color: var(--highlight-color);
       transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(123, 63, 153, 0.3);
     }
 
     .copyright {
       font-size: 0.9rem;
       opacity: 0.8;
+      position: relative;
+      z-index: 1;
     }
 
     /* Floating elements animation */
@@ -420,6 +589,7 @@
       animation: float 15s linear infinite;
     }
 
+    /* Keyframe Animations */
     @keyframes float {
       0% {
         transform: translateY(0) rotate(0deg);
@@ -431,6 +601,72 @@
       100% {
         transform: translateY(-1000px) rotate(720deg);
         opacity: 0;
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes gradientShift {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.1);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes slideInLeft {
+      from {
+        transform: translateX(-50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideInRight {
+      from {
+        transform: translateX(50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes rotate {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
       }
     }
 
@@ -487,6 +723,48 @@
         font-size: 1rem;
       }
     }
+
+    /* Mobile menu */
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-color);
+      font-size: 1.5rem;
+      cursor: pointer;
+      z-index: 101;
+    }
+
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 70%;
+      height: 100vh;
+      background-color: var(--secondary-bg);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: right 0.5s ease;
+      box-shadow: -5px 0 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .mobile-menu.active {
+      right: 0;
+    }
+
+    .mobile-menu .nav-link {
+      margin: 1rem 0;
+      font-size: 1.2rem;
+    }
+
+    @media (max-width: 768px) {
+      .mobile-menu-btn {
+        display: block;
+      }
+    }
   </style>
 </head>
 <body>
@@ -499,7 +777,18 @@
       <a href="#skills" class="nav-link">Skills</a>
       <a href="#contact" class="nav-link">Contact</a>
     </div>
+    <button class="mobile-menu-btn" id="mobileMenuBtn">
+      <i class="fas fa-bars"></i>
+    </button>
   </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#" class="nav-link">Home</a>
+    <a href="#projects" class="nav-link">Projects</a>
+    <a href="#skills" class="nav-link">Skills</a>
+    <a href="#contact" class="nav-link">Contact</a>
+  </div>
 
   <!-- Header Section -->
   <header class="header">
@@ -521,7 +810,7 @@
     <div class="projects-grid">
       <!-- Project 1 -->
       <div class="project-card" data-project="0">
-        <img src="/api/placeholder/400/300" alt="K-means Clustering" class="project-img">
+        <img src="Project2.png" alt="K-means Clustering" class="project-img">
         <div class="project-overlay">
           <h3 class="project-title">KNIME K-means Clustering</h3>
           <div class="project-tags">
@@ -533,7 +822,7 @@
 
       <!-- Project 2 -->
       <div class="project-card" data-project="1">
-        <img src="/api/placeholder/400/300" alt="E-commerce Website" class="project-img">
+        <img src="Project3.png" alt="E-commerce Website" class="project-img">
         <div class="project-overlay">
           <h3 class="project-title">E-commerce Website</h3>
           <div class="project-tags">
@@ -545,7 +834,7 @@
 
       <!-- Project 3 -->
       <div class="project-card" data-project="2">
-        <img src="/api/placeholder/400/300" alt="The Extra Step App" class="project-img">
+        <img src="Project4.png" alt="The Extra Step App" class="project-img">
         <div class="project-overlay">
           <h3 class="project-title">"The Extra Step" App</h3>
           <div class="project-tags">
@@ -557,7 +846,7 @@
 
       <!-- Project 4 -->
       <div class="project-card" data-project="3">
-        <img src="/api/placeholder/400/300" alt="Broadband Speed Prediction" class="project-img">
+        <img src="Project5.png" alt="Broadband Speed Prediction" class="project-img">
         <div class="project-overlay">
           <h3 class="project-title">Broadband Speed Prediction</h3>
           <div class="project-tags">
@@ -569,7 +858,7 @@
 
       <!-- Project 5 -->
       <div class="project-card" data-project="4">
-        <img src="/api/placeholder/400/300" alt="ImageInterpreter" class="project-img">
+        <img src="Project6.png" alt="ImageInterpreter" class="project-img">
         <div class="project-overlay">
           <h3 class="project-title">ImageInterpreter</h3>
           <div class="project-tags">
@@ -581,7 +870,7 @@
 
       <!-- Project 6 -->
       <div class="project-card" data-project="5">
-        <img src="/api/placeholder/400/300" alt="PowerGrapher" class="project-img">
+        <img src="Project7.png" alt="PowerGrapher" class="project-img">
         <div class="project-overlay">
           <h3 class="project-title">PowerGrapher</h3>
           <div class="project-tags">
@@ -593,12 +882,38 @@
 
       <!-- Project 7 -->
       <div class="project-card" data-project="6">
-        <img src="/api/placeholder/400/300" alt="Cisco Network Design" class="project-img">
+        <img src="Project8.png" alt="Cisco Network Design" class="project-img">
         <div class="project-overlay">
           <h3 class="project-title">Cisco Network Design</h3>
           <div class="project-tags">
             <span class="project-tag">Networking</span>
             <span class="project-tag">Infrastructure</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 8 - NEW ASL Recognition App -->
+      <div class="project-card" data-project="7">
+        <img src="Project9.png" alt="ASL Recognition App" class="project-img">
+        <div class="project-overlay">
+          <h3 class="project-title">ASL Recognition App</h3>
+          <div class="project-tags">
+            <span class="project-tag">Flutter</span>
+            <span class="project-tag">TensorFlow Lite</span>
+            <span class="project-tag">Mobile</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 9 - NEW IoT Image Detection -->
+      <div class="project-card" data-project="8">
+        <img src="Project10.png" alt="IoT Image Detection" class="project-img">
+        <div class="project-overlay">
+          <h3 class="project-title">IoT Image Detection</h3>
+          <div class="project-tags">
+            <span class="project-tag">IoT</span>
+            <span class="project-tag">Computer Vision</span>
+            <span class="project-tag">AI</span>
           </div>
         </div>
       </div>
@@ -634,6 +949,14 @@
           <i class="fas fa-cloud skill-icon"></i>
           <h3 class="skill-title">Cloud Computing</h3>
         </div>
+        <div class="skill-card">
+          <i class="fas fa-microchip skill-icon"></i>
+          <h3 class="skill-title">IoT Development</h3>
+        </div>
+        <div class="skill-card">
+          <i class="fas fa-camera skill-icon"></i>
+          <h3 class="skill-title">Computer Vision</h3>
+        </div>
       </div>
     </div>
   </section>
@@ -644,6 +967,7 @@
       <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
       <a href="#" class="social-link"><i class="fab fa-github"></i></a>
       <a href="#" class="social-link"><i class="fas fa-envelope"></i></a>
+      <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
     </div>
     <p class="copyright">© 2025 Jayden Parisutham James. All rights reserved.</p>
   </footer>
@@ -652,7 +976,12 @@
   <div class="modal" id="projectModal">
     <div class="modal-content">
       <button class="modal-close">&times;</button>
-      <img src="/api/placeholder/400/300" alt="Project" class="modal-img" id="modalImg">
+      <div class="modal-img-container">
+        <img src="Project2.png" alt="Project" class="modal-img" id="modalImg">
+        <div class="modal-img-nav" id="modalImgNav">
+          <!-- Image dots will be inserted here for projects with multiple images -->
+        </div>
+      </div>
       <h2 class="modal-title" id="modalTitle">Project Title</h2>
       <p class="modal-desc" id="modalDesc">Project description goes here.</p>
       <div class="modal-tags" id="modalTags">
@@ -666,45 +995,57 @@
     const projectsData = [
       {
         title: "KNIME K-means Clustering for Food Orders",
-        image: "Project2.png",
+        images: ["Project2.png"],
         description: "In this innovative project, I leveraged KNIME's powerful K-means clustering algorithm to develop a sophisticated regression model for food order analysis. The model processes a rich dataset encompassing various aspects of food orders, including delivery times, restaurant information, and cuisine types. By applying advanced clustering techniques, the system uncovers hidden patterns and relationships within the data, providing valuable insights into customer behavior, order trends, and delivery efficiency.",
         tags: ["Data Analytics", "Machine Learning", "Clustering", "KNIME", "Regression"]
       },
       {
         title: "E-commerce Website with Dynamic Database Integration",
-        image: "Project3.png",
+        images: ["Project3.png"],
         description: "This comprehensive e-commerce platform represents a culmination of my web development skills, featuring a seamless integration of front-end and back-end technologies. Built using HTML, CSS, and JavaScript, the website offers an intuitive and responsive user interface. The true power of this project lies in its robust SQL database integration, which enables dynamic product management. Users can effortlessly load, edit, insert, and delete products directly through the website interface.",
         tags: ["Web Development", "HTML/CSS", "JavaScript", "SQL", "Database Design"]
       },
       {
         title: "\"The Extra Step\" Mobile Application",
-        image: "Project4.png",
+        images: ["Project4.png"],
         description: "\"The Extra Step\" is an innovative mobile application designed to promote sustainable transportation choices. This project showcases my skills in mobile app development, API integration, and environmental consciousness. The app utilizes a suite of powerful APIs, including routes API, places API, and Google Maps API, to calculate route distances and compare them with potential gas savings from walking. The integration of Firebase for authentication, supporting both custom account creation and Google sign-in, demonstrates my ability to implement secure and user-friendly login systems.",
         tags: ["Mobile Development", "API Integration", "Google Maps", "Firebase", "Sustainability"]
       },
       {
         title: "Broadband Speed Prediction with Scikit-learn",
-        image: "Project5.png",
+        images: ["Project5.png"],
         description: "This advanced machine learning project showcases my expertise in data science and predictive modeling. Utilizing Scikit-learn, I developed a sophisticated model to predict broadband plan speeds based on various factors such as service provider, connection type, and price. The project involved extensive data preprocessing, feature engineering, and the application of multiple machine learning algorithms. I employed GridCV for hyperparameter tuning, ensuring optimal model performance. To make this tool accessible and user-friendly, I deployed it on a Streamlit-hosted website.",
         tags: ["Machine Learning", "Scikit-learn", "Predictive Modeling", "Streamlit", "Data Science"]
       },
       {
         title: "ImageInterpreter: AWS-powered Image Analysis",
-        image: "Project6.png",
+        images: ["Project6.png"],
         description: "\"ImageInterpreter\" is a cutting-edge web application that harnesses the power of AWS services and AI to provide comprehensive image analysis. By leveraging AWS DynamoDB, Rekognition, S3, CloudWatch, Lambda, and API Gateway, I created a scalable and efficient system for image processing and interpretation. Users can upload images to the platform, which are then analyzed using AWS Rekognition's advanced label detection capabilities. The identified objects and scenes are further enriched with detailed descriptions generated by the Google Gemini API.",
         tags: ["AWS", "Cloud Computing", "AI Integration", "Serverless", "Image Processing"]
       },
       {
         title: "PowerGrapher: Automated Review Analysis and Visualization",
-        image: "Project7.png",
+        images: ["Project7.png"],
         description: "\"PowerGrapher\" represents a pinnacle in my Robotic Process Automation (RPA) expertise, showcasing the power of automation in data analysis and visualization. Developed using UiPath, this sophisticated tool automates the entire process of gathering and analyzing Google Maps reviews. It begins by scraping review data, including content, ratings, author information, and likes. This data is then meticulously compiled into an Excel sheet for structured storage. The true innovation lies in the automatic generation of an HTML file containing interactive, visually appealing graphs that represent the collected data.",
         tags: ["RPA", "UiPath", "Data Visualization", "Automation", "Web Scraping"]
       },
       {
         title: "Cisco Packet Tracer: Comprehensive Home Network Design",
-        image: "Project8.png",
+        images: ["Project8.png"],
         description: "This project showcases my expertise in network design and implementation using Cisco Packet Tracer. I meticulously designed and simulated a robust network infrastructure for a three-story house, demonstrating my ability to create practical, real-world networking solutions. The network design incorporates both WiFi and Ethernet connections, ensuring comprehensive coverage and connectivity throughout the entire home. I strategically utilized a variety of cable types, including Copper Straight-through, Crossover, and Coaxial cables, to optimize signal strength and data transmission across all floors.",
         tags: ["Networking", "Cisco", "Infrastructure", "Network Design", "Simulation"]
+      },
+      {
+        title: "ASL Recognition Flutter App with TensorFlow Lite",
+        images: ["Project9.png"],
+        description: "This innovative mobile application leverages the power of TensorFlow Lite to recognize American Sign Language (ASL) gestures in real-time. Built with Flutter for cross-platform compatibility, the app uses the device's camera to capture hand gestures and interprets them using a custom-trained machine learning model. The model was trained on thousands of ASL gesture images to ensure high accuracy across different lighting conditions and backgrounds. The app features an intuitive interface that displays recognized signs and can translate complete sentences, making communication more accessible for the deaf and hard of hearing community.",
+        tags: ["Flutter", "TensorFlow Lite", "Mobile Development", "Accessibility", "Computer Vision", "Machine Learning"]
+      },
+      {
+        title: "IoT Image Detection System",
+        images: ["Project10.png", "Project11.png"],
+        description: "This cutting-edge IoT project combines hardware sensors with advanced computer vision to create an intelligent image detection system. The system uses connected cameras to capture images when triggered by motion or other environmental sensors. These images are then processed through a sophisticated machine learning model that can identify and classify objects with high precision. What sets this project apart is its automated notification system - when objects of interest are detected, the system sends detailed email alerts containing the captured image along with confidence scores for each detected object. This makes it ideal for security monitoring, wildlife observation, or industrial quality control applications.",
+        tags: ["IoT", "Computer Vision", "Email Notifications", "Object Detection", "Embedded Systems", "Cloud Computing"]
       }
     ];
 
@@ -713,10 +1054,15 @@
     const modal = document.getElementById('projectModal');
     const modalClose = document.querySelector('.modal-close');
     const modalImg = document.getElementById('modalImg');
+    const modalImgNav = document.getElementById('modalImgNav');
     const modalTitle = document.getElementById('modalTitle');
     const modalDesc = document.getElementById('modalDesc');
     const modalTags = document.getElementById('modalTags');
     const navbar = document.getElementById('navbar');
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const sectionTitles = document.querySelectorAll('.section-title');
+    const skillCards = document.querySelectorAll('.skill-card');
 
     // Event Listeners
     projectCards.forEach(card => {
@@ -744,6 +1090,19 @@
       } else {
         navbar.classList.remove('scrolled');
       }
+      
+      // Check if elements are in viewport for animations
+      checkVisibility();
+    });
+
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('active');
+    });
+
+    document.querySelectorAll('.mobile-menu .nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.remove('active');
+      });
     });
 
     // Functions
@@ -751,8 +1110,6 @@
       const project = projectsData[index];
       
       // Set modal content
-      modalImg.src = project.image;
-      modalImg.alt = project.title;
       modalTitle.textContent = project.title;
       modalDesc.textContent = project.description;
       
@@ -767,6 +1124,30 @@
         modalTags.appendChild(tagElement);
       });
       
+      // Handle multiple images if present
+      modalImgNav.innerHTML = '';
+      if (project.images.length > 1) {
+        modalImgNav.style.display = 'flex';
+        project.images.forEach((img, i) => {
+          const dot = document.createElement('div');
+          dot.classList.add('modal-img-dot');
+          if (i === 0) dot.classList.add('active');
+          dot.addEventListener('click', () => {
+            document.querySelectorAll('.modal-img-dot').forEach(d => d.classList.remove('active'));
+            dot.classList.add('active');
+            modalImg.src = project.images[i];
+            modalImg.alt = `${project.title} - Image ${i+1}`;
+          });
+          modalImgNav.appendChild(dot);
+        });
+      } else {
+        modalImgNav.style.display = 'none';
+      }
+      
+      // Set first image
+      modalImg.src = project.images[0];
+      modalImg.alt = project.title;
+      
       // Show modal
       modal.classList.add('active');
       document.body.style.overflow = 'hidden';
@@ -775,7 +1156,7 @@
     // Create floating elements for background animation
     function createFloatingElements() {
       const header = document.querySelector('.header');
-      const numberOfElements = 15;
+      const numberOfElements = 20;
       
       for (let i = 0; i < numberOfElements; i++) {
         const element = document.createElement('div');
@@ -800,6 +1181,43 @@
       }
     }
 
+    // Check if elements are in viewport for animations
+    function checkVisibility() {
+      // Animate section titles
+      sectionTitles.forEach(title => {
+        if (isInViewport(title)) {
+          title.classList.add('visible');
+        }
+      });
+      
+      // Animate project cards
+      projectCards.forEach((card, index) => {
+        if (isInViewport(card)) {
+          setTimeout(() => {
+            card.classList.add('visible');
+          }, index * 100); // Staggered animation
+        }
+      });
+      
+      // Animate skill cards
+      skillCards.forEach((card, index) => {
+        if (isInViewport(card)) {
+          setTimeout(() => {
+            card.classList.add('visible');
+          }, index * 100); // Staggered animation
+        }
+      });
+    }
+
+    // Check if element is in viewport
+    function isInViewport(element) {
+      const rect = element.getBoundingClientRect();
+      return (
+        rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.9 &&
+        rect.bottom >= 0
+      );
+    }
+
     // Initialize floating elements
     createFloatingElements();
 
@@ -818,15 +1236,10 @@
       });
     });
 
-    // Add this function after your other JavaScript
-document.addEventListener('DOMContentLoaded', function() {
-  // Update project card images based on projectsData
-  projectCards.forEach((card, index) => {
-    const projectImg = card.querySelector('.project-img');
-    projectImg.src = projectsData[index].image;
-    projectImg.alt = projectsData[index].title;
-  });
-});
+    // Initialize animations on load
+    window.addEventListener('load', () => {
+      checkVisibility();
+    });
   </script>
 </body>
 </html>
